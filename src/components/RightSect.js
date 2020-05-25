@@ -34,13 +34,16 @@ function RightSect() {
       width:200px;
       font-family:'Raleway';
       font-size:1rem;
+      &:hover {
+       
+      }
     `
     
 
     return (
         <StyledSection>
             <Header>SUPER MODERN BANK</Header>
-            <SubHeader>We Are Without a Doubt, the Best Modern Bank of All Time</SubHeader>
+            <SubHeader>We Are Without a Doubt, the Bankiest Bank to Ever Bank</SubHeader>
             <LoginBtn>Learn more</LoginBtn>
         </StyledSection>
     )

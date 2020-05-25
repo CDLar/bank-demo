@@ -11,10 +11,7 @@ function LeftSect() {
     align-items:center;
     padding-bottom:5em;
     `
-    const StyledImg = styled.img.attrs({ src: moneyPic })`
-    height:500px;
-    width:500px;
-    `
+    const StyledImg = styled.img.attrs({ src: moneyPic })``
     return (
         <StyledSection>
             <StyledImg />
