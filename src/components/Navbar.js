@@ -1,43 +1,53 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { LanguageContext } from '../contexts/LanguageContext'
 import styled from 'styled-components'
 import { AiFillLock } from "react-icons/ai";
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import Button from '@material-ui/core/Button';
-import { createMuiTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
+import { translated } from '../contexts/translated'
 
+const useStyles = makeStyles({
+    root: {
+        color: '#D1D6D7',
+        '&:hover': {
+            color: 'white'
+        },
+        icon: {
+            '&:hover': {
+                color: 'white'
+            }
+        }
+    },
+    icon: {
+        color: '#D1D6D7',
+        '&:hover': {
+            color: 'white'
+        }
+    }
+});
 
 function Navbar() {
 
-    const [lang, setLang] = React.useState('en');
     const [open, setOpen] = React.useState(false);
+    const { language, changeLanguage } = useContext(LanguageContext)
+
+    const classes = useStyles();
 
     const handleChange = (event) => {
-        setLang(event.target.value);
-      };
-    
-      const handleClose = () => {
-        setOpen(false);
-      };
-    
-      const handleOpen = () => {
-        setOpen(true);
-      };
+        changeLanguage(event);
+    };
 
-      const theme = createMuiTheme({
-        overrides: {
-          // Style sheet name ⚛️
-          MuiButton: {
-            // Name of the rule
-            text: {
-              // Some CSS
-              color: 'white',
-            },
-          },
-        },
-      });
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+
 
     const MainNav = styled.nav`
 display:flex;
@@ -117,7 +127,7 @@ display:flex;
         width:100%;
     }
     `
-    
+
     const Logo = styled.h1``
 
     return (
@@ -129,27 +139,30 @@ display:flex;
             </StartWrapper>
             <EndWrapper>
                 <NavLinks>
-                    <NavLink>Contact</NavLink>
+                    <NavLink>{translated.navOne[language]}</NavLink>
                     <NavLink>
                         <FormControl>
                             <Select
-                                style={{color:'white'}}
-                                disableUnderline={true} 
+                                classes={{
+                                    root: classes.root, // class name, e.g. `classes-nesting-root-x`
+                                    icon: classes.icon,
+                                }}
+                                disableUnderline={true}
                                 labelId="demo-controlled-open-select-label"
                                 id="demo-controlled-open-select"
                                 open={open}
                                 onClose={handleClose}
                                 onOpen={handleOpen}
-                                value={lang}
+                                value={language}
                                 onChange={handleChange}
                             >
                                 <MenuItem value={'en'}>English</MenuItem>
-                                <MenuItem value={'fr'}>French</MenuItem>
-                                <MenuItem value={'kr'}>Korean</MenuItem>
+                                <MenuItem value={'fr'}>Français</MenuItem>
+                                <MenuItem value={'kr'}>한국어</MenuItem>
                             </Select>
                         </FormControl>
                     </NavLink>
-                    <NavLink>Sign in<AiFillLock style={{ marginLeft: '10px' }} /></NavLink>
+                    <NavLink>{translated.navTwo[language]}<AiFillLock style={{ marginLeft: '10px' }} /></NavLink>
                 </NavLinks>
             </EndWrapper>
         </MainNav>

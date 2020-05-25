@@ -1,7 +1,13 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import styled from 'styled-components'
+import { LanguageContext } from '../contexts/LanguageContext'
+import { translated } from '../contexts/translated'
+
 
 function RightSect() {
+
+    const { language } = useContext(LanguageContext)
+
     const StyledSection = styled.section`
     display:flex;
     flex-direction:column;
@@ -38,13 +44,13 @@ function RightSect() {
        
       }
     `
-    
+
 
     return (
         <StyledSection>
-            <Header>SUPER MODERN BANK</Header>
-            <SubHeader>We Are Without a Doubt, the Bankiest Bank to Ever Bank</SubHeader>
-            <LoginBtn>Learn more</LoginBtn>
+            <Header>{translated.header[language]}</Header>
+            <SubHeader>{translated.subheader[language]}</SubHeader>
+            <LoginBtn>{translated.button[language]}</LoginBtn>
         </StyledSection>
     )
 }

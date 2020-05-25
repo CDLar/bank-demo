@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import Navbar from './components/Navbar';
 import LeftSection from './components/LeftSect'
 import RightSection from './components/RightSect'
+import { LanguageProvider } from './contexts/LanguageContext'
 
 function App() {
   const Main = styled.div`
@@ -17,11 +18,13 @@ function App() {
       clip-path: polygon(0 0, 100% 0, 100% 83%, 0% 100%);
 `
   return (
-    <Main>
-      <Navbar />
-      <LeftSection />
-      <RightSection />
-    </Main>
+    <LanguageProvider>
+      <Main>
+        <Navbar />
+        <LeftSection />
+        <RightSection />
+      </Main>
+    </LanguageProvider>
   );
 }
 
