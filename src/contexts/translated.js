@@ -24,4 +24,34 @@ export const translated = {
         fr: "Plus D’informations",
         kr: '더 알아보기'
     },
+    loginHeader: {
+        en: 'Login',
+        fr: "S'identifier",
+        kr: '로구인'
+    },
+    loginMsg: {
+        en: 'Please enter your login details in the form below',
+        fr: 'Veuillez saisir vos informations de connexion dans le formulaire ci-dessous',
+        kr: '로그인 세부 정보를 아래 양식에 입력하십시오'
+    },
+    loginCancel: {
+        en: 'Cancel',
+        fr: 'Annuler',
+        kr: '취소'
+    },
+    loginSubmit: {
+        en: 'Submit',
+        fr: 'Soumettre',
+        kr: '제출'
+    },
+    loginUser: {
+        en: 'Username',
+        fr: "Nom d'utilisateur",
+        kr: '아이디'
+    },
+    loginPassword: {
+        en: 'Password',
+        fr: 'Mot de passe',
+        kr: '비밀번호'
+    },
 }
