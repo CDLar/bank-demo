@@ -27,7 +27,7 @@ export const translated = {
     loginHeader: {
         en: 'Login',
         fr: "S'identifier",
-        kr: '로구인'
+        kr: '로그인'
     },
     loginMsg: {
         en: 'Please enter your login details in the form below',
