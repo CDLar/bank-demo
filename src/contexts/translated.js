@@ -25,7 +25,7 @@ export const translated = {
         kr: '더 알아보기'
     },
     loginHeader: {
-        en: 'Logen',
+        en: 'Login',
         fr: "S'identifier",
         kr: '로그인'
     },
