@@ -39,21 +39,8 @@ const useStyles = makeStyles({
     }
 });
 
-function Navbar() {
-
-    //Setting React States
-    const [ langState, langOpen, langClose ] = useToggle()
-    const [ loginState, loginOpen, loginClose ] = useToggle()
-    const { language, changeLanguage } = useContext(LanguageContext)
-
-    const classes = useStyles();
-
-    const handleLangChange = (event) => {
-        changeLanguage(event);
-    };
-
-    //Styled Components
-    const MainNav = styled.nav`
+//Styled Components CSS
+const MainNav = styled.nav`
 display:flex;
 height:10vh;
 align-items:center;
@@ -62,7 +49,7 @@ width:100%;
 background-color:rgba(0, 0, 0, 0.2);
 `
 
-    const StartWrapper = styled.div`
+const StartWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -71,17 +58,17 @@ background-color:rgba(0, 0, 0, 0.2);
   padding-left:5em;
 `
 
-    const EndWrapper = styled.div`
+const EndWrapper = styled.div`
   width:70%;
   height:100%;
   padding-right:5em;
 `
 
-    const LogoContainer = styled.div`
+const LogoContainer = styled.div`
 display:flex;
 `
 
-    const NavLinks = styled.ul`
+const NavLinks = styled.ul`
     width:100%;
     display:flex;
     flex-flow:row nowrap;
@@ -90,7 +77,7 @@ display:flex;
     height:100%;
     `
 
-    const NavLink = styled.li`
+const NavLink = styled.li`
     list-style-type:none;
     padding: 0 20px;
     margin: 0 10px;
@@ -132,7 +119,19 @@ display:flex;
     }
     `
 
-    const Logo = styled.h1``
+const Logo = styled.h1``
+
+function Navbar() {
+
+    //Setting React States
+    const [langState, langOpen, langClose] = useToggle()
+    const [loginState, loginOpen, loginClose] = useToggle()
+    const { language, changeLanguage } = useContext(LanguageContext)
+    const classes = useStyles();
+
+    const handleLangChange = (event) => {
+        changeLanguage(event);
+    };
 
     return (
         <MainNav>
@@ -170,7 +169,7 @@ display:flex;
                         <DialogContent>
                             <DialogContentText>
                                 {translated.loginMsg[language]}
-          </DialogContentText>
+                            </DialogContentText>
                             <TextField
                                 autoFocus
                                 margin="dense"
@@ -190,10 +189,10 @@ display:flex;
                         <DialogActions>
                             <Button onClick={loginClose} color="primary">
                                 {translated.loginCancel[language]}
-          </Button>
+                            </Button>
                             <Button onClick={loginClose} color="primary">
                                 {translated.loginSubmit[language]}
-          </Button>
+                            </Button>
                         </DialogActions>
                     </Dialog>
                 </NavLinks>
