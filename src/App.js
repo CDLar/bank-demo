@@ -21,7 +21,6 @@ function App() {
   return (
     <LanguageProvider>
       <Main>
-        <Navbar />
         <LeftSection />
         <RightSection />
       </Main>
