@@ -11,9 +11,9 @@ ReactDOM.render(
     <GlobalStyles />
     <AuthProvider>
       <UserProvider>
-      <LanguageProvider>
-        <App />
-      </LanguageProvider>
+        <LanguageProvider>
+          <App />
+        </LanguageProvider>
       </UserProvider>
     </AuthProvider>
   </React.StrictMode>,

@@ -5,9 +5,14 @@ export const translated = {
         kr: '연락처'
     },
     navTwo: {
-        en: 'sign in',
+        en: 'Log in',
         fr: 'se connecter',
         kr: '로그인'
+    },
+    navThree: {
+        en: 'Log Out',
+        fr: 'Se déconnecter',
+        kr: '로그아웃'
     },
     header: {
         en: 'SUPER MODERN BANK',

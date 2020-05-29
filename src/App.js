@@ -3,8 +3,8 @@ import styled from 'styled-components'
 import Navbar from './components/Navbar';
 import LeftSection from './components/LeftSect'
 import RightSection from './components/RightSect'
-import { AuthContext } from './contexts/AuthContext'
 import { UserContext } from './contexts/UserContext'
+import { AuthContext } from './contexts/AuthContext'
 
 const Main = styled.div`
 height:100vh;
@@ -17,24 +17,32 @@ background: linear-gradient(to right, #0052D4, #65C7F7, #9CECFB); /* W3C, IE 10+
 color: #fff;
 clip-path: polygon(0 0, 100% 0, 100% 83%, 0% 100%);
 `
+const Header = styled.h1`
+font-size:5rem;
+display:flex;
+margin-left:1em;
+`
 
 function App() {
-  const { auth } = useContext(AuthContext)
   const { user } = useContext(UserContext)
+  const { auth } = useContext(AuthContext)
+
   return (
     <Main>
       <Navbar />
-      {auth
-        ?
-        <>
-           <h1>{`Hello ${user.title} ${user.username}`}</h1>
-           <h1>{`Balance: ${user.currencySymbol}${user.balance} ${user.currency}`}</h1>
-        </>
-        :
-        <>
-          < LeftSection />
-          <RightSection />
-        </>
+      {user && auth
+        ? (
+          <>
+            <Header>{`Hello ${user.title} ${user.username}`}</Header>
+            <Header>{`Balance: ${user.currencySymbol} ${user.balance} ${user.currency}`}</Header>
+          </>
+        )
+        : (
+          <>
+            < LeftSection />
+            <RightSection />
+          </>
+        )
       }
     </Main>
   );

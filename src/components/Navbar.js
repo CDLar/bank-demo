@@ -1,8 +1,10 @@
 import React, { useContext } from 'react'
 import Login from '../components/Login'
 import { LanguageContext } from '../contexts/LanguageContext'
+import { AuthContext } from '../contexts/AuthContext'
+import { UserContext } from '../contexts/UserContext'
 import styled from 'styled-components'
-import { AiFillLock } from "react-icons/ai"
+import { AiFillLock, AiFillUnlock } from "react-icons/ai"
 import useToggle from '../hooks/useToggle'
 import { translated } from '../contexts/translated'
 
@@ -122,10 +124,20 @@ function Navbar() {
     const [loginState, loginOpen, loginClose] = useToggle()
     const { language, changeLanguage } = useContext(LanguageContext)
     const classes = useStyles();
+    const { auth, setAuth } = useContext(AuthContext)
+    const { user, setUser } = useContext(UserContext)
+
+
 
     const handleLangChange = (event) => {
         changeLanguage(event);
     };
+
+    const handleLogout = () => {
+        setAuth(false);
+        setUser({});
+        alert('You have been logged out')
+    }
 
     return (
         <MainNav>
@@ -157,7 +169,16 @@ function Navbar() {
                             </Select>
                         </FormControl>
                     </NavLink>
-                    <NavLink onClick={loginOpen} >{translated.navTwo[language]}<AiFillLock style={{ marginLeft: '10px' }} /></NavLink>
+                    {auth && user
+                        ? 
+                        (
+                            <NavLink onClick={handleLogout} >{translated.navThree[language]}<AiFillUnlock style={{ marginLeft: '10px' }} /></NavLink>
+                        )
+                        :
+                        (
+                            <NavLink onClick={loginOpen} >{translated.navTwo[language]}<AiFillLock style={{ marginLeft: '10px' }} /></NavLink>
+                        )
+                    }
                     <Login {...({ language, loginState, loginClose })} />
                 </NavLinks>
             </EndWrapper>

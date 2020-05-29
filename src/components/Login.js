@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
 import { translated } from '../contexts/translated'
 import { useForm } from 'react-hook-form'
-import { DevTool } from 'react-hook-form-devtools'
 import styled from 'styled-components'
 import { users } from '../userData'
 import { AuthContext } from '../contexts/AuthContext'
@@ -23,7 +22,7 @@ font-size:.8rem;
 `
 
 const Login = ({ language, loginState, loginClose }) => {
-    const { register, handleSubmit, errors, control, getValues } = useForm({
+    const { register, handleSubmit, errors } = useForm({
         mode: 'onChange',
         reValidateMode: 'onChange'
     })
@@ -34,19 +33,18 @@ const Login = ({ language, loginState, loginClose }) => {
     const onSubmit = (data) => {
         const activeUser = users.find(user => user.username === data.username && user.password === data.password);
 
-        if (!activeUser) {
-            alert('Login failed')
+         if (!activeUser) {
+             alert('Login failed')
 
-        } else if (activeUser) {
-            setUser(activeUser)
+         } else if (activeUser) {
+            setUser(activeUser) 
             setAuth(true)
-            loginClose()
-        }
+             loginClose()
+         }
     }
 
     return (
         <Dialog open={loginState} onClose={loginClose} aria-labelledby="form-dialog-title" >
-            <DevTool control={control} />
             <form onSubmit={handleSubmit(onSubmit)}>
                 <DialogTitle id="form-dialog">{translated.loginHeader[language]}</DialogTitle>
                 <DialogContent>
