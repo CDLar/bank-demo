@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { translated } from '../contexts/translated'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { DevTool } from 'react-hook-form-devtools'
 import styled from 'styled-components'
+import { users } from '../userData'
+import { AuthContext } from '../contexts/AuthContext'
+import { UserContext } from '../contexts/UserContext'
 
 //Material UI Imports
 import Button from '@material-ui/core/Button';
@@ -25,8 +28,20 @@ const Login = ({ language, loginState, loginClose }) => {
         reValidateMode: 'onChange'
     })
 
+    const { setAuth } = useContext(AuthContext)
+    const { setUser } = useContext(UserContext)
+
     const onSubmit = (data) => {
-        alert(JSON.stringify(data))
+        const activeUser = users.find(user => user.username === data.username && user.password === data.password);
+
+        if (!activeUser) {
+            alert('Login failed')
+
+        } else if (activeUser) {
+            setUser(activeUser)
+            setAuth(true)
+            loginClose()
+        }
     }
 
     return (
@@ -42,7 +57,7 @@ const Login = ({ language, loginState, loginClose }) => {
                         autoFocus
                         margin="dense"
                         id="username"
-                        inputRef={register({ required: "You must specify a username.", minLength: { value: 6, message: 'Username must have at least 6 characters.' } })}
+                        inputRef={register({ required: "You must specify a username.", minLength: { value: 2, message: 'Username must have at least 6 characters.' } })}
                         name='username'
                         label={translated.loginUser[language]}
                         type="text"
@@ -53,7 +68,7 @@ const Login = ({ language, loginState, loginClose }) => {
                     <TextField
                         margin="dense"
                         id="password"
-                        inputRef={register({ required: "You must specify a password.", minLength: { value: 6, message: 'Password must have at least 6 characters.' } })}
+                        inputRef={register({ required: "You must specify a password.", minLength: { value: 2, message: 'Password must have at least 6 characters.' } })}
                         label={translated.loginPassword[language]}
                         type="password"
                         name='password'
@@ -61,6 +76,7 @@ const Login = ({ language, loginState, loginClose }) => {
                         fullWidth
                     />
                     {errors.password && <ErrorMsg>{errors.password.message}</ErrorMsg>}
+                    {/* {!loginAuth && <ErrorMsg>{errors.password.message}</ErrorMsg>} */}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={loginClose} color="primary">
