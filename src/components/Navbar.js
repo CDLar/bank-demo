@@ -1,18 +1,19 @@
 import React, { useContext } from 'react'
-import Login from '../components/Login'
 import { LanguageContext } from '../contexts/LanguageContext'
 import { AuthContext } from '../contexts/AuthContext'
 import { UserContext } from '../contexts/UserContext'
+import Login from './Login'
+import Currency from './Currency'
 import styled from 'styled-components'
 import { AiFillLock, AiFillUnlock } from "react-icons/ai"
 import useToggle from '../hooks/useToggle'
 import { translated } from '../contexts/translated'
+import { makeStyles } from '@material-ui/core/styles'
 
 //Material UI imports
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
-import { makeStyles } from '@material-ui/core/styles'
 
 //Material UI styles
 const useStyles = makeStyles({
@@ -32,7 +33,7 @@ const useStyles = makeStyles({
         '&:hover': {
             color: 'white'
         }
-    }
+    },
 });
 
 //Styled Components CSS
@@ -122,11 +123,11 @@ function Navbar() {
     //Setting React States
     const [langState, langOpen, langClose] = useToggle()
     const [loginState, loginOpen, loginClose] = useToggle()
+    const [currState, currOpen, currClose] = useToggle()
     const { language, changeLanguage } = useContext(LanguageContext)
-    const classes = useStyles();
     const { auth, setAuth } = useContext(AuthContext)
     const { user, setUser } = useContext(UserContext)
-
+    const classes = useStyles();
 
 
     const handleLangChange = (event) => {
@@ -148,8 +149,8 @@ function Navbar() {
             </StartWrapper>
             <EndWrapper>
                 <NavLinks>
-                    <NavLink>{translated.navOne[language]}</NavLink>
-                    <NavLink>
+                    <NavLink id='currency' onClick={currOpen} >{translated.navOne[language]}</NavLink>
+                    <NavLink id='language'>
                         <FormControl>
                             <Select
                                 classes={{
@@ -170,16 +171,17 @@ function Navbar() {
                         </FormControl>
                     </NavLink>
                     {auth && user
-                        ? 
+                        ?
                         (
-                            <NavLink onClick={handleLogout} >{translated.navThree[language]}<AiFillUnlock style={{ marginLeft: '10px' }} /></NavLink>
+                            <NavLink id='Login' onClick={handleLogout} >{translated.navThree[language]}<AiFillUnlock style={{ marginLeft: '10px' }} /></NavLink>
                         )
                         :
                         (
-                            <NavLink onClick={loginOpen} >{translated.navTwo[language]}<AiFillLock style={{ marginLeft: '10px' }} /></NavLink>
+                            <NavLink id='logout' onClick={loginOpen} >{translated.navTwo[language]}<AiFillLock style={{ marginLeft: '10px' }} /></NavLink>
                         )
                     }
                     <Login {...({ language, loginState, loginClose })} />
+                    <Currency {...({ language, currState, currClose })} />
                 </NavLinks>
             </EndWrapper>
         </MainNav>
