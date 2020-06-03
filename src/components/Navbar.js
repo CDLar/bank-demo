@@ -10,12 +10,12 @@ import useToggle from '../hooks/useToggle'
 import { translated } from '../contexts/translated'
 import { makeStyles } from '@material-ui/core/styles'
 
-//Material UI imports
+//MUI imports
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 
-//Material UI styles
+//MUI styles
 const useStyles = makeStyles({
     root: {
         color: '#D1D6D7',

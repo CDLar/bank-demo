@@ -1,5 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { countryFlags, countryNames } from './CountryFlags'
 import axios from 'axios'
+import styled from 'styled-components'
+import { format, sub } from 'date-fns'
+import ReactCountryFlag from "react-country-flag"
+import { UserContext } from '../contexts/UserContext'
+
+//MUI imports
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -9,54 +16,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import TablePagination from '@material-ui/core/TablePagination';
-import { format, sub } from 'date-fns'
-
-//Column settings
-const columns = [
-  { id: 'Country', label: 'Country', minWidth: 170 },
-  {
-    id: 'oneDay',
-    label: '1D',
-    minWidth: 170,
-    align: 'center',
-    format: (value) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'oneWeek',
-    label: '1W',
-    minWidth: 170,
-    align: 'center',
-    format: (value) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'oneMonth',
-    label: '1M',
-    minWidth: 170,
-    align: 'center',
-    format: (value) => value.toFixed(2),
-  },
-  {
-    id: 'threeMonth',
-    label: '3M',
-    minWidth: 170,
-    align: 'center',
-    format: (value) => value.toFixed(2),
-  },
-  {
-    id: 'sixMonth',
-    label: '6M',
-    minWidth: 170,
-    align: 'center',
-    format: (value) => value.toFixed(2),
-  },
-  {
-    id: 'oneYear',
-    label: '1Y',
-    minWidth: 170,
-    align: 'center',
-    format: (value) => value.toFixed(2),
-  },
-];
 
 //MUI styles
 const useStyles = makeStyles({
@@ -68,12 +27,25 @@ const useStyles = makeStyles({
   },
 });
 
+//SC styles
+const StyledChange = styled.p`
+font-size:0.7rem;
+color: ${props => props.isPositive ? 'green' : 'red'};
+`
+
+const Change = ({ number }) =>
+  <StyledChange isPositive={number >= 0}>{number >= 0
+    ? `▲ ${number.toFixed(2)} %`
+    : `▼ ${number.toFixed(2) * -1} %`}</StyledChange>
+
 export default function CurrencyTable() {
   const classes = useStyles();
   const [data, setData] = useState()
+  const [dataKeys, setDataKeys] = useState()
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(25);
+  const [rowsPerPage, setRowsPerPage] = React.useState(50);
   const currDate = new Date()
+  const { user } = useContext(UserContext)
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -84,28 +56,79 @@ export default function CurrencyTable() {
     setPage(0);
   };
 
+  //Column settings
+  const columns = [
+    { id: 'Country', label: 'Country', minWidth: 120 },
+    { id: 'Rate', label: `Rate (${user.currAbr})`, minWidth: 200, align: 'center' },
+    {
+      id: 'oneDay',
+      label: '1D',
+      minWidth: 130,
+      align: 'center',
+      format: (value) => value.toLocaleString('en-US'),
+    },
+    {
+      id: 'oneWeek',
+      label: '1W',
+      minWidth: 130,
+      align: 'center',
+      format: (value) => value.toLocaleString('en-US'),
+    },
+    {
+      id: 'oneMonth',
+      label: '1M',
+      minWidth: 130,
+      align: 'center',
+      format: (value) => value.toFixed(2),
+    },
+    {
+      id: 'threeMonth',
+      label: '3M',
+      minWidth: 130,
+      align: 'center',
+      format: (value) => value.toFixed(2),
+    },
+    {
+      id: 'sixMonth',
+      label: '6M',
+      minWidth: 130,
+      align: 'center',
+      format: (value) => value.toFixed(2),
+    },
+    {
+      id: 'oneYear',
+      label: '1Y',
+      minWidth: 130,
+      align: 'center',
+      format: (value) => value.toFixed(2),
+    },
+  ];
+
   useEffect(() => {
     const fetchData = async () => {
       const result = await axios(
         'https://api.exchangeratesapi.io/latest?base=USD',
       );
       const resultOneDay = await axios(
-        `https://api.exchangeratesapi.io/${format(sub(currDate, {days:2}), 'yyyy-MM-dd')}?base=USD`,
+        `https://api.exchangeratesapi.io/${format(sub(currDate, { days: 2 }), 'yyyy-MM-dd')}?base=${user.currAbr}`,
       );
       const resultOneWeek = await axios(
-        `https://api.exchangeratesapi.io/${format(sub(currDate, {days:2}), 'yyyy-MM-dd')}?base=USD`,
+        `https://api.exchangeratesapi.io/${format(sub(currDate, { days: 7 }), 'yyyy-MM-dd')}?base=USD`,
       );
       const resultOneMonth = await axios(
-        `https://api.exchangeratesapi.io/${format(sub(currDate, {days:2}), 'yyyy-MM-dd')}?base=USD`,
+        `https://api.exchangeratesapi.io/${format(sub(currDate, { months: 1 }), 'yyyy-MM-dd')}?base=USD`,
       );
       const resultThreeMonth = await axios(
-        `https://api.exchangeratesapi.io/${format(sub(currDate, {days:2}), 'yyyy-MM-dd')}?base=USD`,
+        `https://api.exchangeratesapi.io/${format(sub(currDate, { months: 3 }), 'yyyy-MM-dd')}?base=USD`,
       );
       const resultSixMonth = await axios(
-        `https://api.exchangeratesapi.io/${format(sub(currDate, {days:2}), 'yyyy-MM-dd')}?base=USD`,
+        `https://api.exchangeratesapi.io/${format(sub(currDate, { months: 6 }), 'yyyy-MM-dd')}?base=USD`,
       );
-      
-      setData(result.data.rates);
+      const resultOneYear = await axios(
+        `https://api.exchangeratesapi.io/${format(sub(currDate, { years: 1 }), 'yyyy-MM-dd')}?base=USD`,
+      );
+      setDataKeys(Object.keys(result.data.rates))
+      setData([Object.values(result.data.rates), Object.values(resultOneDay.data.rates), Object.values(resultOneWeek.data.rates), Object.values(resultOneMonth.data.rates), Object.values(resultThreeMonth.data.rates), Object.values(resultSixMonth.data.rates), Object.values(resultOneYear.data.rates)]);
     };
     fetchData();
   }, []);
@@ -128,26 +151,37 @@ export default function CurrencyTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data && Object.entries(data).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(([key, value]) => (
-              <TableRow key={key}>
-                <TableCell component="th" scope="row">
-                  {key}
+            {data && dataKeys.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((val, idx) => (
+              <TableRow key={val}>
+                <TableCell component="th" scope="row" align="left">
+                  <ReactCountryFlag
+                    countryCode={countryFlags[idx]}
+                    svg
+                    style={{
+                      width: '50px',
+                      height: '25px'
+                    }}
+                    cdnUrl="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.3/flags/1x1/"
+                    cdnSuffix="svg"
+                    title={countryNames[idx]}
+                  />{val}
                 </TableCell>
-                <TableCell align="center">{value.toFixed(5)}</TableCell>
-                <TableCell align="center">{value.toFixed(5)}</TableCell>
-                <TableCell align="center">{value.toFixed(5)}</TableCell>
-                <TableCell align="center">{value.toFixed(5)}</TableCell>
-                <TableCell align="center">{value.toFixed(5)}</TableCell>
-                <TableCell align="center">{value.toFixed(5)}</TableCell>
+                <TableCell align="center">{data[0][idx].toFixed(5)}</TableCell>
+                <TableCell align="center">{data[1][idx].toFixed(5)}<Change number={((data[0][idx] - data[1][idx]) / data[1][idx] * 100)} /></TableCell>
+                <TableCell align="center">{data[2][idx].toFixed(5)}<Change number={((data[0][idx] - data[2][idx]) / data[1][idx] * 100)} /></TableCell>
+                <TableCell align="center">{data[3][idx].toFixed(5)}<Change number={((data[0][idx] - data[3][idx]) / data[1][idx] * 100)} /></TableCell>
+                <TableCell align="center">{data[4][idx].toFixed(5)}<Change number={((data[0][idx] - data[4][idx]) / data[1][idx] * 100)} /></TableCell>
+                <TableCell align="center">{data[5][idx].toFixed(5)}<Change number={((data[0][idx] - data[5][idx]) / data[1][idx] * 100)} /></TableCell>
+                <TableCell align="center">{data[6][idx].toFixed(5)}<Change number={((data[0][idx] - data[6][idx]) / data[1][idx] * 100)} /></TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
       {data && (<TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
+        rowsPerPageOptions={[10, 25, 50]}
         component="div"
-        count={data.length}
+        count={data[0].length}
         rowsPerPage={rowsPerPage}
         page={page}
         onChangePage={handleChangePage}
