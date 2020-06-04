@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { format, sub } from 'date-fns'
 import ReactCountryFlag from "react-country-flag"
 import { UserContext } from '../contexts/UserContext'
+import ClipLoader from "react-spinners/ClipLoader";
 
 //MUI imports
 import { makeStyles } from '@material-ui/core/styles';
@@ -24,9 +25,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 const useStyles = makeStyles({
   root: {
     width: '100%',
+
   },
   container: {
     maxHeight: 440,
+    minHeight: 440
   },
 });
 
@@ -34,6 +37,11 @@ const useStyles = makeStyles({
 const StyledChange = styled.p`
 font-size:0.7rem;
 color: ${props => props.isPositive ? 'green' : 'red'};
+`
+const Loader = styled.div`
+position: fixed;
+top:50%;
+left:50%;
 `
 
 const Change = ({ number }) =>
@@ -45,7 +53,8 @@ export default function CurrencyTable() {
   const classes = useStyles();
   const [data, setData] = useState()
   const [dataKeys, setDataKeys] = useState()
-  const [page, setPage] = React.useState(0);
+  const [page, setPage] = useState(0);
+  const [loading, setLoading] = useState(true)
   const [rowsPerPage, setRowsPerPage] = React.useState(50);
   const currDate = new Date()
   const { user } = useContext(UserContext)
@@ -76,6 +85,7 @@ export default function CurrencyTable() {
   const handleNewCurr = (currency) => {
     setActiveCurrency(currency)
     handleClose()
+    setLoading(true)
   }
 
   //Column settings
@@ -151,11 +161,12 @@ export default function CurrencyTable() {
       );
       setDataKeys(Object.keys(result.data.rates))
       setData([Object.values(result.data.rates), Object.values(resultOneDay.data.rates), Object.values(resultOneWeek.data.rates), Object.values(resultOneMonth.data.rates), Object.values(resultThreeMonth.data.rates), Object.values(resultSixMonth.data.rates), Object.values(resultOneYear.data.rates)]);
+      setLoading(false)
     };
     fetchData();
   }, [activeCurrency]);
 
-  return (    
+  return (
     <Paper className={classes.root}>
       <TableContainer className={classes.container}>
         <Table stickyHeader aria-label="sticky table">
@@ -195,30 +206,41 @@ export default function CurrencyTable() {
             </>
           </TableHead>
           <TableBody>
-            {data && dataKeys.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((val, idx) => (
-              <TableRow key={val}>
-                <TableCell component="th" scope="row" align="left">
-                  <ReactCountryFlag
-                    countryCode={countryFlags[idx]}
-                    svg
-                    style={{
-                      width: '50px',
-                      height: '25px'
-                    }}
-                    cdnUrl="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.3/flags/1x1/"
-                    cdnSuffix="svg"
-                    title={countryNames[idx]}
-                  />{val}
-                </TableCell>
-                <TableCell align="center">{data[0][idx].toFixed(5)}</TableCell>
-                <TableCell align="center">{data[1][idx].toFixed(5)}<Change number={((data[0][idx] - data[1][idx]) / data[1][idx] * 100)} /></TableCell>
-                <TableCell align="center">{data[2][idx].toFixed(5)}<Change number={((data[0][idx] - data[2][idx]) / data[1][idx] * 100)} /></TableCell>
-                <TableCell align="center">{data[3][idx].toFixed(5)}<Change number={((data[0][idx] - data[3][idx]) / data[1][idx] * 100)} /></TableCell>
-                <TableCell align="center">{data[4][idx].toFixed(5)}<Change number={((data[0][idx] - data[4][idx]) / data[1][idx] * 100)} /></TableCell>
-                <TableCell align="center">{data[5][idx].toFixed(5)}<Change number={((data[0][idx] - data[5][idx]) / data[1][idx] * 100)} /></TableCell>
-                <TableCell align="center">{data[6][idx].toFixed(5)}<Change number={((data[0][idx] - data[6][idx]) / data[1][idx] * 100)} /></TableCell>
-              </TableRow>
-            ))}
+            {!loading
+              ?
+              (
+                dataKeys.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((val, idx) => (
+                  <TableRow key={val}>
+                    <TableCell component="th" scope="row" align="left">
+                      <ReactCountryFlag
+                        countryCode={countryFlags[idx]}
+                        svg
+                        style={{
+                          width: '50px',
+                          height: '25px'
+                        }}
+                        cdnUrl="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.3/flags/1x1/"
+                        cdnSuffix="svg"
+                        title={countryNames[idx]}
+                      />{val}
+                    </TableCell>
+                    <TableCell align="center">{data[0][idx].toFixed(5)}</TableCell>
+                    <TableCell align="center">{data[1][idx].toFixed(5)}<Change number={((data[0][idx] - data[1][idx]) / data[1][idx] * 100)} /></TableCell>
+                    <TableCell align="center">{data[2][idx].toFixed(5)}<Change number={((data[0][idx] - data[2][idx]) / data[1][idx] * 100)} /></TableCell>
+                    <TableCell align="center">{data[3][idx].toFixed(5)}<Change number={((data[0][idx] - data[3][idx]) / data[1][idx] * 100)} /></TableCell>
+                    <TableCell align="center">{data[4][idx].toFixed(5)}<Change number={((data[0][idx] - data[4][idx]) / data[1][idx] * 100)} /></TableCell>
+                    <TableCell align="center">{data[5][idx].toFixed(5)}<Change number={((data[0][idx] - data[5][idx]) / data[1][idx] * 100)} /></TableCell>
+                    <TableCell align="center">{data[6][idx].toFixed(5)}<Change number={((data[0][idx] - data[6][idx]) / data[1][idx] * 100)} /></TableCell>
+                  </TableRow>
+                ))
+              )
+              :
+              (
+                <Loader>
+                  <ClipLoader size={50} color={'#65C7F7'}/>
+                </Loader>
+              )
+            }
           </TableBody>
         </Table>
       </TableContainer>
