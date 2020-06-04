@@ -16,6 +16,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import TablePagination from '@material-ui/core/TablePagination';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 //MUI styles
 const useStyles = makeStyles({
@@ -46,6 +49,7 @@ export default function CurrencyTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(50);
   const currDate = new Date()
   const { user } = useContext(UserContext)
+  const [activeCurrency, setActiveCurrency] = useState(user ? user.currAbr : 'USD')
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -56,10 +60,28 @@ export default function CurrencyTable() {
     setPage(0);
   };
 
+  const ITEM_HEIGHT = 48;
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleNewCurr = (currency) => {
+    setActiveCurrency(currency)
+    handleClose()
+  }
+
   //Column settings
   const columns = [
     { id: 'Country', label: 'Country', minWidth: 120 },
-    { id: 'Rate', label: `Rate (${user.currAbr})`, minWidth: 200, align: 'center' },
+    { id: 'Rate', label: `Rate (${activeCurrency})`, minWidth: 200, align: 'center' },
     {
       id: 'oneDay',
       label: '1D',
@@ -107,48 +129,70 @@ export default function CurrencyTable() {
   useEffect(() => {
     const fetchData = async () => {
       const result = await axios(
-        'https://api.exchangeratesapi.io/latest?base=USD',
+        `https://api.exchangeratesapi.io/latest?base=${activeCurrency}`,
       );
       const resultOneDay = await axios(
-        `https://api.exchangeratesapi.io/${format(sub(currDate, { days: 2 }), 'yyyy-MM-dd')}?base=${user.currAbr}`,
+        `https://api.exchangeratesapi.io/${format(sub(currDate, { days: 2 }), 'yyyy-MM-dd')}?base=${activeCurrency}`,
       );
       const resultOneWeek = await axios(
-        `https://api.exchangeratesapi.io/${format(sub(currDate, { days: 7 }), 'yyyy-MM-dd')}?base=USD`,
+        `https://api.exchangeratesapi.io/${format(sub(currDate, { days: 7 }), 'yyyy-MM-dd')}?base=${activeCurrency}`,
       );
       const resultOneMonth = await axios(
-        `https://api.exchangeratesapi.io/${format(sub(currDate, { months: 1 }), 'yyyy-MM-dd')}?base=USD`,
+        `https://api.exchangeratesapi.io/${format(sub(currDate, { months: 1 }), 'yyyy-MM-dd')}?base=${activeCurrency}`,
       );
       const resultThreeMonth = await axios(
-        `https://api.exchangeratesapi.io/${format(sub(currDate, { months: 3 }), 'yyyy-MM-dd')}?base=USD`,
+        `https://api.exchangeratesapi.io/${format(sub(currDate, { months: 3 }), 'yyyy-MM-dd')}?base=${activeCurrency}`,
       );
       const resultSixMonth = await axios(
-        `https://api.exchangeratesapi.io/${format(sub(currDate, { months: 6 }), 'yyyy-MM-dd')}?base=USD`,
+        `https://api.exchangeratesapi.io/${format(sub(currDate, { months: 6 }), 'yyyy-MM-dd')}?base=${activeCurrency}`,
       );
       const resultOneYear = await axios(
-        `https://api.exchangeratesapi.io/${format(sub(currDate, { years: 1 }), 'yyyy-MM-dd')}?base=USD`,
+        `https://api.exchangeratesapi.io/${format(sub(currDate, { years: 1 }), 'yyyy-MM-dd')}?base=${activeCurrency}`,
       );
       setDataKeys(Object.keys(result.data.rates))
       setData([Object.values(result.data.rates), Object.values(resultOneDay.data.rates), Object.values(resultOneWeek.data.rates), Object.values(resultOneMonth.data.rates), Object.values(resultThreeMonth.data.rates), Object.values(resultSixMonth.data.rates), Object.values(resultOneYear.data.rates)]);
     };
     fetchData();
-  }, []);
+  }, [activeCurrency]);
 
-  return (
+  return (    
     <Paper className={classes.root}>
       <TableContainer className={classes.container}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
+            <>
+              <TableRow>
+                {columns.map((column) => (
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{ minWidth: column.minWidth }}
+                  >
+                    {column.label}
+                    {column.id === 'Rate' && <ArrowDropDownIcon onClick={handleClick} />}
+                  </TableCell>
+                ))}
+              </TableRow>
+              <Menu
+                id="long-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={open}
+                onClose={handleClose}
+                PaperProps={{
+                  style: {
+                    maxHeight: ITEM_HEIGHT * 4.5,
+                    width: '20ch',
+                  },
+                }}
+              >
+                {data && dataKeys.map((currency) => (
+                  <MenuItem key={currency} onClick={() => handleNewCurr(currency)}>
+                    {currency}
+                  </MenuItem>
+                ))}
+              </Menu>
+            </>
           </TableHead>
           <TableBody>
             {data && dataKeys.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((val, idx) => (
