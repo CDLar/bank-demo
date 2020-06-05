@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { translated } from '../contexts/translated'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
@@ -22,6 +22,8 @@ font-size:.8rem;
 `
 
 const Login = ({ language, loginState, loginClose }) => {
+    const [loginFailed, setLoginFailed] = useState(false)
+
     const { register, handleSubmit, errors } = useForm({
         mode: 'onChange',
         reValidateMode: 'onChange'
@@ -33,14 +35,14 @@ const Login = ({ language, loginState, loginClose }) => {
     const onSubmit = (data) => {
         const activeUser = users.find(user => user.username === data.username && user.password === data.password);
 
-         if (!activeUser) {
-             alert('Login failed')
-
-         } else if (activeUser) {
-            setUser(activeUser) 
+        if (!activeUser) {
+            setLoginFailed(true)
+        } else if (activeUser) {
+            setUser(activeUser)
             setAuth(true)
-             loginClose()
-         }
+            setLoginFailed(false)
+            loginClose()
+        }
     }
 
     return (
@@ -62,7 +64,6 @@ const Login = ({ language, loginState, loginClose }) => {
                         error={!!errors.name}
                         fullWidth
                     />
-                    {errors.username && <ErrorMsg>{errors.username.message}</ErrorMsg>}
                     <TextField
                         margin="dense"
                         id="password"
@@ -73,8 +74,7 @@ const Login = ({ language, loginState, loginClose }) => {
                         error={!!errors.validName}
                         fullWidth
                     />
-                    {errors.password && <ErrorMsg>{errors.password.message}</ErrorMsg>}
-                    {/* {!loginAuth && <ErrorMsg>{errors.password.message}</ErrorMsg>} */}
+                    {loginFailed && <ErrorMsg>The username or password you entered is incorrect.</ErrorMsg>}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={loginClose} color="primary">

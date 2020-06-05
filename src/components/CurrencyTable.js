@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { countryFlags, countryNames } from './CountryFlags'
+import { countryFlags, countryNames, currencyNames } from './CountryFlags'
 import axios from 'axios'
 import styled from 'styled-components'
 import { format, sub } from 'date-fns'
@@ -52,7 +52,6 @@ const Change = ({ number }) =>
 export default function CurrencyTable() {
   const classes = useStyles();
   const [data, setData] = useState()
-  const [dataKeys, setDataKeys] = useState()
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true)
   const [rowsPerPage, setRowsPerPage] = React.useState(50);
@@ -159,8 +158,7 @@ export default function CurrencyTable() {
       const resultOneYear = await axios(
         `https://api.exchangeratesapi.io/${format(sub(currDate, { years: 1 }), 'yyyy-MM-dd')}?base=${activeCurrency}`,
       );
-      setDataKeys(Object.keys(result.data.rates))
-      setData([Object.values(result.data.rates), Object.values(resultOneDay.data.rates), Object.values(resultOneWeek.data.rates), Object.values(resultOneMonth.data.rates), Object.values(resultThreeMonth.data.rates), Object.values(resultSixMonth.data.rates), Object.values(resultOneYear.data.rates)]);
+      setData([Object.keys(result.data.rates),Object.values(result.data.rates), Object.values(resultOneDay.data.rates), Object.values(resultOneWeek.data.rates), Object.values(resultOneMonth.data.rates), Object.values(resultThreeMonth.data.rates), Object.values(resultSixMonth.data.rates), Object.values(resultOneYear.data.rates)]);
       setLoading(false)
     };
     fetchData();
@@ -197,7 +195,7 @@ export default function CurrencyTable() {
                   },
                 }}
               >
-                {data && dataKeys.map((currency) => (
+                {data && currencyNames.map((currency) => (
                   <MenuItem key={currency} onClick={() => handleNewCurr(currency)}>
                     {currency}
                   </MenuItem>
@@ -209,7 +207,7 @@ export default function CurrencyTable() {
             {!loading
               ?
               (
-                dataKeys.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((val, idx) => (
+                data[0].slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((val, idx) => (
                   <TableRow key={val}>
                     <TableCell component="th" scope="row" align="left">
                       <ReactCountryFlag
@@ -224,13 +222,13 @@ export default function CurrencyTable() {
                         title={countryNames[idx]}
                       />{val}
                     </TableCell>
-                    <TableCell align="center">{data[0][idx].toFixed(5)}</TableCell>
-                    <TableCell align="center">{data[1][idx].toFixed(5)}<Change number={((data[0][idx] - data[1][idx]) / data[1][idx] * 100)} /></TableCell>
-                    <TableCell align="center">{data[2][idx].toFixed(5)}<Change number={((data[0][idx] - data[2][idx]) / data[1][idx] * 100)} /></TableCell>
-                    <TableCell align="center">{data[3][idx].toFixed(5)}<Change number={((data[0][idx] - data[3][idx]) / data[1][idx] * 100)} /></TableCell>
-                    <TableCell align="center">{data[4][idx].toFixed(5)}<Change number={((data[0][idx] - data[4][idx]) / data[1][idx] * 100)} /></TableCell>
-                    <TableCell align="center">{data[5][idx].toFixed(5)}<Change number={((data[0][idx] - data[5][idx]) / data[1][idx] * 100)} /></TableCell>
-                    <TableCell align="center">{data[6][idx].toFixed(5)}<Change number={((data[0][idx] - data[6][idx]) / data[1][idx] * 100)} /></TableCell>
+                    <TableCell align="center">{data[1][idx].toFixed(5)}</TableCell>
+                    <TableCell align="center">{data[2][idx].toFixed(5)}<Change number={((data[1][idx] - data[2][idx]) / data[2][idx] * 100)} /></TableCell>
+                    <TableCell align="center">{data[3][idx].toFixed(5)}<Change number={((data[1][idx] - data[3][idx]) / data[3][idx] * 100)} /></TableCell>
+                    <TableCell align="center">{data[4][idx].toFixed(5)}<Change number={((data[1][idx] - data[4][idx]) / data[4][idx] * 100)} /></TableCell>
+                    <TableCell align="center">{data[5][idx].toFixed(5)}<Change number={((data[1][idx] - data[5][idx]) / data[5][idx] * 100)} /></TableCell>
+                    <TableCell align="center">{data[6][idx].toFixed(5)}<Change number={((data[1][idx] - data[6][idx]) / data[6][idx] * 100)} /></TableCell>
+                    <TableCell align="center">{data[7][idx].toFixed(5)}<Change number={((data[1][idx] - data[7][idx]) / data[7][idx] * 100)} /></TableCell>
                   </TableRow>
                 ))
               )
