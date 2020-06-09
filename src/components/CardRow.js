@@ -53,7 +53,7 @@ const CardRow = () => {
             <Card className={classes.cardRootFirst}>
                 <CardContent>
                     <Typography className={classes.title} color="textSecondary" gutterBottom>
-                        Savings Account
+                        Checking Account
         </Typography>
                     <Typography className={classes.amount} variant="h5" component="h2">
                         $ 1,657.12
@@ -72,7 +72,7 @@ const CardRow = () => {
             <Card className={classes.cardRoot}>
                 <CardContent>
                     <Typography className={classes.title} color="textSecondary" gutterBottom>
-                        Checking Account
+                        Savings Account
         </Typography>
                     <Typography className={classes.amount} variant="h5" component="h2">
                         $ 23,758.23
@@ -97,10 +97,10 @@ const CardRow = () => {
                         $ 675.23
         </Typography>
                     <Typography className={classes.pos} color="textSecondary">
-                        4564-9172-4752-7703
+                    Available balance
         </Typography>
                     <Typography variant="body2" component="p">
-                        Available balance
+                        4564-9172-4752-7703
                     </Typography>
                 </CardContent>
                 <CardActions>

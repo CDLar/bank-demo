@@ -39,7 +39,8 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '0.85rem'
     },
     listItemText: {
-        fontSize: '0.85rem'
+        fontSize: '0.85rem',
+        fontWeight: 500
     },
     listItem: {
         marginTop: '-6px',
