@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components'
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import CardRow from './CardRow'
+import Quickpay from './Quickpay'
+import Transactions from './Transactions'
 
 //MUI Imports
 import AppBar from '@material-ui/core/AppBar';
@@ -16,8 +18,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 //Styled Components
 const Grid = styled.div`
 width:100%;
-height:100%;
-border: 2px green solid;
 `
 
 const Row = styled.div`
@@ -61,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.up('sm')]: {
             width: `calc(100% - ${drawerWidth}px)`,
             marginLeft: drawerWidth,
+            marginTop:'10vh'
         },
     },
     menuButton: {
@@ -88,7 +89,7 @@ function Dashboard(props) {
 
     const drawer = (
         <div>
-            <div className={classes.toolbar} />
+            <div style={{height:'10vh'}} className={classes.toolbar} />
             <Divider />
             <List>
                 {['Banking', 'Single Payment', 'Bill Payments', 'Automatic Payments', 'Upcoming Payments'].map((text, index) => (
@@ -165,8 +166,8 @@ function Dashboard(props) {
                     <CardRow />
                 </Row>
                 <Row>
-                        <div style={{backgroundColor:'white', flex:7, height:'350px', marginLeft:'15px'}}></div>
-                        <div style={{backgroundColor:'white', flex:3, height:'350px', marginLeft:'15px', marginRight:'15px'}}></div>
+                        <Transactions />
+                        <Quickpay />
                 </Row>
             </Grid>
         </div>
@@ -174,6 +175,3 @@ function Dashboard(props) {
 }
 
 export default Dashboard;
-
-    // <Header>{`Hello ${user.title} ${user.username}`}</Header>
-    //             <Balance>{`Balance: ${user.currencySymbol} ${user.balance} ${user.currency}`}</Balance>

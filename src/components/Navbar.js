@@ -18,21 +18,12 @@ import Select from '@material-ui/core/Select'
 //MUI styles
 const useStyles = makeStyles({
     root: {
-        color: '#D1D6D7',
-        '&:hover': {
-            color: 'white'
-        },
+        color: 'white',
         icon: {
-            '&:hover': {
-                color: 'white'
-            }
         }
     },
     icon: {
-        color: '#D1D6D7',
-        '&:hover': {
-            color: 'white'
-        }
+        color: 'white',
     },
 });
 
@@ -44,6 +35,7 @@ align-items:center;
 flex-flow: row nowrap;
 width:100%;
 background-color:rgba(0, 0, 0, 0.2);
+z-index:100;
 `
 
 const StartWrapper = styled.div`
@@ -86,7 +78,7 @@ const NavLink = styled.li`
     position:relative;
     height:60%;
     transition: all .5s;
-    color:#D1D6D7;
+    color:white;
 
     &:before {
         transition: all .5s;
@@ -94,7 +86,6 @@ const NavLink = styled.li`
 
     &:hover {
         cursor:pointer;
-        color:white;
     }
 
     &:after{

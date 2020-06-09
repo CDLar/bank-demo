@@ -49,7 +49,7 @@ const Change = ({ number }) =>
     ? `▲ ${number.toFixed(2)} %`
     : `▼ ${number.toFixed(2) * -1} %`}</StyledChange>
 
-export default function CurrencyTable() {
+function CurrencyTable() {
   const classes = useStyles();
   const [data, setData] = useState()
   const [page, setPage] = useState(0);
@@ -158,7 +158,7 @@ export default function CurrencyTable() {
       const resultOneYear = await axios(
         `https://api.exchangeratesapi.io/${format(sub(currDate, { years: 1 }), 'yyyy-MM-dd')}?base=${activeCurrency}`,
       );
-      setData([Object.keys(result.data.rates),Object.values(result.data.rates), Object.values(resultOneDay.data.rates), Object.values(resultOneWeek.data.rates), Object.values(resultOneMonth.data.rates), Object.values(resultThreeMonth.data.rates), Object.values(resultSixMonth.data.rates), Object.values(resultOneYear.data.rates)]);
+      setData([Object.keys(result.data.rates), Object.values(result.data.rates), Object.values(resultOneDay.data.rates), Object.values(resultOneWeek.data.rates), Object.values(resultOneMonth.data.rates), Object.values(resultThreeMonth.data.rates), Object.values(resultSixMonth.data.rates), Object.values(resultOneYear.data.rates)]);
       setLoading(false)
     };
     fetchData();
@@ -235,7 +235,7 @@ export default function CurrencyTable() {
               :
               (
                 <Loader>
-                  <ClipLoader size={50} color={'#65C7F7'}/>
+                  <ClipLoader size={50} color={'#65C7F7'} />
                 </Loader>
               )
             }
@@ -254,3 +254,4 @@ export default function CurrencyTable() {
     </Paper>
   );
 }
+export default CurrencyTable
