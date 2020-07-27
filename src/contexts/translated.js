@@ -1,8 +1,8 @@
 export const translated = {
     navOne: {
-        en: 'contact',
-        fr: 'contact',
-        kr: '연락처'
+        en: 'currency',
+        fr: 'devise',
+        kr: '통화'
     },
     navTwo: {
         en: 'Log in',

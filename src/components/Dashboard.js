@@ -31,7 +31,7 @@ const drawerWidth = 200;
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
-        height: '90vh',
+        height: 'auto',
         width: '100%',
     },
     listItemTextHeader: {
